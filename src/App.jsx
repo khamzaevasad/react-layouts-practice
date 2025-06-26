@@ -15,33 +15,54 @@ import PageNotFound from './pages/PageNotFound';
 import Articles from './pages/articles/Articles';
 import ArticlesDetail from './pages/articles/ArticlesDetail';
 //react-router-dom
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 function App() {
-  const routes = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path="/" element={<RootLayout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<ContactLayout />}>
-          <Route path="faq" element={<Faq />} />
-          <Route path="form" element={<Form />} />
-        </Route>
-        <Route path="articles" element={<ArticlesLayout />}>
-          <Route index element={<Articles />} />
-          <Route path=":id" element={<ArticlesDetail />} />
-        </Route>
-
-        {/* page not found */}
-        <Route path="*" element={<PageNotFound />} />
-      </Route>
-    )
-  );
+  const routes = createBrowserRouter([
+    {
+      path: '/',
+      element: <RootLayout />,
+      errorElement: <PageNotFound />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: '/about',
+          element: <About />,
+        },
+        {
+          path: 'contact',
+          element: <ContactLayout />,
+          children: [
+            {
+              path: 'faq',
+              element: <Faq />,
+            },
+            {
+              path: 'form',
+              element: <Form />,
+            },
+          ],
+        },
+        {
+          path: 'articles',
+          element: <ArticlesLayout />,
+          children: [
+            {
+              index: true,
+              element: <Articles />,
+            },
+            {
+              path: ':id',
+              element: <ArticlesDetail />,
+            },
+          ],
+        },
+      ],
+    },
+  ]);
 
   return (
     <div className="App">
